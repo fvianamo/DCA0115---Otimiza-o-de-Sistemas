@@ -1,0 +1,43 @@
+= DCA 0115 - Otimização de Sistemas
+Filipe Viana Monteiro <filipevianam@gmail.com>
+:toc: left
+:toc-title: Sumário
+
+== 1. Resumo
+
+Essa página descreve a implementação de duas técnicas de otimização de sistemas não lineares, sendo elas o algoritmo genético e o algoritmo da nuvem de particulas. Essa atividade foi desenvolvida na disciplina de Otimização de Sistemas ofertada no semestre 2016.1 pelo DCA/UFRN.
+
+== 2. Função Objetivo
+
+A função objetivo a ser minimizada pelas duas tecnicas implementadas tem seu gráfico, em 3 dimensões e de contorno, ilustradas abaixo.
+
+image:./images/functionSurf.png[width = "450", height = "450", role = "left", caption = "Plot 3D"]
+image:./images/functionContour.png[width = "450", height = "450", role = "right"]
+
+O código em Matlab que descreve a função objetivo a ser otimizada pode ser visto abaixo.
+
+[source, matlab]
+.objectiveFunction.m
+----
+include::./codes/objectiveFunction.m[objectiveFunction.m]
+----
+
+== 3. Algoritmo da Nuvem de Partículas
+
+O algoritmo da nuvem de partículas é um técnica de otimização de problemas não lineares inspirada no comportamento e na dinâmica dos movimentos dos pássaros, insetos e peixes. Nessa técnica, a população de partículas é inicializada aleatóriamente, dentro do espaço de busca para a solução ótima, e as velocidades das particulas é calculada pela combinação da velocidade atual da partícula somada a distância dessa partícula a melhor posição já alcançada pela mesma e a distância dessa partícula a melhor posição já alcançada pelo conjunto.
+
+O código em matlab que implementa o algoritmo da nuvem de partículas pode ser visto abaixo.
+
+[source, matlab]
+.PSO.m
+----
+include::./codes/PSO/PSO.m[PSO.m]
+----
+
+Para os parâmetros especificados no código acima, a implementação do algoritmo da nuvem de partículas foi capaz de encontrar o que acredita-se ser o menor valor para a função objetivo na área de busca em apenas duas iterações. Abaixo estão os gráficos da melhor posição e seu valor correspondente na função versus iteração que comprovam a efitividade do algoritmo.
+
+image::./images/bestPosPSO.png[width = "500", height = "500", align = "center"]
+
+image::./images/minPSO.png[width = "500", height = "500", align = "center"]
+
+== 4. Algoritmo Genético
