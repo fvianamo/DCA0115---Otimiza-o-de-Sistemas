@@ -1,56 +1,65 @@
 %parametros do algoritmo
-pSize = 50; %tamanho da população
-pCross = 0.65; %taxa de crossover
-pMut = 0.1; %taxa de mutação
-limGer = 5; %limite de gerações
+popSize = 30; %tamanho da populacao
+pCross = 0.9; %porcentagem de crossover
+pMut = 0.05; %porcentagem de mutacao
+ger = 5; %quantidade de geracoes
 
-%limites de entrada
+%area de busca
 xMin = -500;
 xMax = 500;
 yMin = -500;
 yMax = 500;
 
-%inicialização do variaveis
-pop = zeros(pSize, 2); %população [x y]
-apt = zeros(pSize, 1); %vetor de aptidão
-selected = zeros(pSize, 2); %indivíduos selecionados pela roleta
-bestApt = zeros(limGer, 1); %historico de melhor aptidão
-bestPop = zeros(limGer, 2); %historico de melhor indivíduo
+%inicializacao de variaveis
+pop = zeros(popSize, 2);
+apt = zeros(popSize, 1);
+aptNorm = zeros(popSize, 1);
+histBest = zeros(ger, 3);
 
-%inicializando população
-for i = 1:pSize
-   pop(i, 1) = xMin + rand()*(xMax - xMin);
-   pop(i, 2) = yMin + rand()*(yMax - yMin);
+%população inicial
+for i=1:popSize 
+    pop(i, :) = [(xMin + rand()*(xMax - xMin)) (yMin + rand()*(yMax - yMin))];
 end
-disp('primeira população gerada!');
 
-ger = 1;
+gerAt = 1;
 
-while ger < limGer
-    figure(ger);
-    plot(pop(:,1), pop(:,2), 'o');
-    %calula aptidão do indivíduo
-    apt = objectiveFunction(pop(:, 1), pop(:, 2));
+while gerAt <= ger
+    figure(1);
+    plot(pop(:,1), pop(:,2), '*');
+    hold on
+    apt = objectiveFunction(pop(:,1), pop(:,2));
+    aptNorm = normaliza(apt);
     
-    %realiza sorteio para definir os pais
-    [selected, bestApt(ger), bestPop(ger, :)] = roleta(pop, apt);
+    %seleciona os individuos que irão fazer crossover
+    selected = roleta(pop, aptNorm);
+    
+    k = 1;
     
     %realiza operação de crossover
-    for i = 1:((pSize/2)-1)
+    for i=1:((popSize/2)-1)
         i1 = 2*i;
         i2 = 2*i+1;
-        if(rand() < pCross)
+        if rand() < pCross
             [pop(i1,:), pop(i2,:)] = crossover(selected(i1,:), selected(i2,:), pMut);
         else
             pop(i1,:) = selected(i1,:); 
             pop(i2,:) = selected(i2,:);
+        end 
+    end
+    
+    for i=1:popSize
+        if aptNorm(i) == 1
+            histBest(gerAt,:) = [pop(i,:) apt(i)];
+            figure(2);
+            plot(histBest(:,1), histBest(:,2), '*');
+            hold on;
         end
     end
     
-    ger = ger + 1;
+    gerAt = gerAt + 1;
 end
 
-figure();
-plot(bestPop(:,1), bestPop(:,2), 'o');
-figure();
-plot(bestApt);
+% figure(2);
+% plot(histBest(:,1), histBest(:,2), '*');
+figure(3);
+plot(histBest(:,3));
