@@ -16,7 +16,7 @@ apt = zeros(popSize, 1);
 aptNorm = zeros(popSize, 1);
 histBest = zeros(ger, 3);
 
-%população inicial
+%populacao inicial
 for i=1:popSize 
     pop(i, :) = [(xMin + rand()*(xMax - xMin)) (yMin + rand()*(yMax - yMin))];
 end
@@ -30,12 +30,12 @@ while gerAt <= ger
     apt = objectiveFunction(pop(:,1), pop(:,2));
     aptNorm = normaliza(apt);
     
-    %seleciona os individuos que irão fazer crossover
+    %seleciona os individuos que irao fazer crossover
     selected = roleta(pop, aptNorm);
     
     k = 1;
     
-    %realiza operação de crossover
+    %realiza operacao de crossover
     for i=1:((popSize/2)-1)
         i1 = 2*i;
         i2 = 2*i+1;
@@ -51,15 +51,8 @@ while gerAt <= ger
         if aptNorm(i) == 1
             histBest(gerAt,:) = [pop(i,:) apt(i)];
             figure(2);
-            plot(histBest(:,1), histBest(:,2), '*');
-            hold on;
         end
     end
     
     gerAt = gerAt + 1;
 end
-
-% figure(2);
-% plot(histBest(:,1), histBest(:,2), '*');
-figure(3);
-plot(histBest(:,3));

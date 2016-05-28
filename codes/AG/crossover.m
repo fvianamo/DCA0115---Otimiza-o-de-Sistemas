@@ -8,11 +8,11 @@ function [filho1, filho2] = crossover(pai1, pai2, pMut)
     pai1 = round(pai1.*100); %preserva duas casas decimais
     pai2 = round(pai2.*100); %preserva duas casas decimais
     
-    %converte os pais em binário
+    %converte os pais em binario
     pai1 = dec2bin(typecast(int8(pai1), 'uint8'), nbits);
     pai2 = dec2bin(typecast(int8(pai2), 'uint8'), nbits);
     
-    %gera ponto de separação
+    %gera ponto de separacao
     split = round(rand()*nbits);
     
     %cria os filhos
@@ -26,7 +26,7 @@ function [filho1, filho2] = crossover(pai1, pai2, pMut)
     filho2(1, split:nbits) = pai1(1, split:nbits);
     filho2(1, split:nbits) = pai1(1, split:nbits);
     
-    %realiza mutação
+    %realiza mutacao
     for i = 1:nbits
        if rand() < pMut
             if filho1(1,i) == 0
@@ -66,7 +66,3 @@ function [filho1, filho2] = crossover(pai1, pai2, pMut)
     filho1 = transpose(filho1);
     filho2 = transpose(filho2);
 end
-
-% conversão para binario
-% xbin = dec2bin(typecast(int8(input), 'uint8'), nbits);
-% xreverse = typecast(uint8(bin2dec(xbin)), 'int8');

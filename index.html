@@ -432,6 +432,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_2_função_objetivo">2. Função Objetivo</a></li>
 <li><a href="#_3_algoritmo_da_nuvem_de_partículas">3. Algoritmo da Nuvem de Partículas</a></li>
 <li><a href="#_4_algoritmo_genético">4. Algoritmo Genético</a></li>
+<li><a href="#_5_conclusão">5. Conclusão</a></li>
 </ul>
 </div>
 </div>
@@ -440,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_1_resumo">1. Resumo</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Essa página descreve a implementação de duas técnicas de otimização de sistemas não lineares, sendo elas o algoritmo genético e o algoritmo da nuvem de particulas. Essa atividade foi desenvolvida na disciplina de Otimização de Sistemas ofertada no semestre 2016.1 pelo DCA/UFRN.</p>
+<p>Essa página descreve a implementação de duas técnicas de otimização de sistemas não lineares, sendo elas o algoritmo genético e o algoritmo da nuvem de partículas. Essa atividade foi desenvolvida na disciplina de Otimização de Sistemas ofertada no semestre 2016.1 pelo DCA/UFRN.</p>
 </div>
 </div>
 </div>
@@ -448,7 +449,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_2_função_objetivo">2. Função Objetivo</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A função objetivo a ser minimizada pelas duas tecnicas implementadas tem seu gráfico, em 3 dimensões e de contorno, ilustradas abaixo.</p>
+<p>A função objetivo a ser minimizada pelas duas técnicas implementadas tem seu gráfico, em 3 dimensões e de contorno, ilustradas abaixo.</p>
 </div>
 <div class="paragraph">
 <p><span class="image left"><img src="./images/functionSurf.png" alt="functionSurf" width="450" height="450"></span>
@@ -508,7 +509,7 @@ end</code></pre>
 <h2 id="_3_algoritmo_da_nuvem_de_partículas">3. Algoritmo da Nuvem de Partículas</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>O algoritmo da nuvem de partículas é um técnica de otimização de problemas não lineares inspirada no comportamento e na dinâmica dos movimentos dos pássaros, insetos e peixes. Nessa técnica, a população de partículas é inicializada aleatóriamente, dentro do espaço de busca para a solução ótima, e as velocidades das particulas é calculada pela combinação da velocidade atual da partícula somada a distância dessa partícula a melhor posição já alcançada pela mesma e a distância dessa partícula a melhor posição já alcançada pelo conjunto.</p>
+<p>O algoritmo da nuvem de partículas é uma técnica de otimização de problemas não lineares inspirada no comportamento e na dinâmica dos movimentos dos pássaros, insetos e peixes. Nessa técnica, a população de partículas é inicializada aleatoriamente, dentro do espaço de busca para a solução ótima, e as velocidades das partículas é calculada pela combinação da velocidade atual da partícula somada a distância dessa partícula a melhor posição já alcançada pela mesma e a distância dessa partícula a melhor posição já alcançada pelo conjunto.</p>
 </div>
 <div class="paragraph">
 <p>O código em matlab que implementa o algoritmo da nuvem de partículas pode ser visto abaixo.</p>
@@ -595,7 +596,7 @@ end</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Para os parâmetros especificados no código acima, a implementação do algoritmo da nuvem de partículas foi capaz de encontrar o que acredita-se ser o menor valor para a função objetivo na área de busca em apenas duas iterações. Abaixo estão os gráficos da melhor posição e seu valor correspondente na função versus iteração que comprovam a efitividade do algoritmo.</p>
+<p>Para os parâmetros especificados no código acima, a implementação do algoritmo da nuvem de partículas foi capaz de encontrar o que acredita-se ser o menor valor para a função objetivo na área de busca em apenas duas iterações. Abaixo estão os gráficos da melhor posição e seu valor correspondente na função versus iteração que comprovam a efetividade do algoritmo.</p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
@@ -612,13 +613,244 @@ end</code></pre>
 <div class="sect1">
 <h2 id="_4_algoritmo_genético">4. Algoritmo Genético</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>O algoritmo genético é também uma técnica de otimização de problemas não lineares e é inspirado na teoria da evolução, onde os indivíduos mais aptos tem uma maior probabilidade de reproduzir e gerar descendentes.</p>
+</div>
+<div class="paragraph">
+<p>Primeiramente, uma população é gerada aleatoriamente dentro do espaço de busca da função e essa população, no caso estudado, nada mais é do que pontos (x,y) dentro da área de busca(-500:500, 500:-500). A aptidão capacidade do indivíduo de reproduzir é dada pelo seu valor na função objetivo, e o indivíduo é tão apto quanto menor for seu valor na função objetivo, já que trata-se de um problema de minimização.</p>
+</div>
+<div class="paragraph">
+<p>O código abaixo é responsável por normalizar o vetor de aptidão dos indivíduos da população de forma que esse vetor esteja normalizado para valor entre 0 e 1, sendo 1 o indivíduo com melhor aptidão, ou seja, menor valor na função objetivo.</p>
+</div>
+<div class="listingblock">
+<div class="title">Normaliza.m</div>
+<div class="content">
+<pre class="highlight"><code class="language-matlab" data-lang="matlab">function aptNorm = normaliza(apt)
+    [l c] = size(apt);
+    aptNorm = zeros(l,1);
 
+    worstApt = inf;
+    bestApt = -inf;
+
+    apt = -apt; %minimizacao
+
+    for i=1:l
+        if apt(i) &lt; worstApt
+            worstApt = apt(i);
+        end
+        if apt(i) &gt; bestApt
+            bestApt = apt(i);
+        end
+    end
+    aptNorm = (apt +abs(worstApt))./(bestApt - worstApt);
+end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Uma vez que o vetor aptidão está normalizado é possível realizar o sorteio dos indivíduos que serão os pais para a nova geração. Este sorteio segue o método da roleta e é realizado pela função abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="title">roleta.m</div>
+<div class="content">
+<pre class="highlight"><code class="language-matlab" data-lang="matlab">function selected = roleta(pop, aptNorm)
+    [l c] = size(pop);
+    selected = zeros(l,c);
+
+    it = 1;
+
+    while it &lt;= l
+        r = rand();
+        i = 1;
+        while aptNorm(i) &lt; r;
+            i = i + 1;
+        end
+        selected(it,:) = pop(i,:);
+        it = it + 1;
+    end
+end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Após a seleção dos pais da próxima geração, é hora de gerar os indivíduos da próxima. Nesta fase dois parâmetros são importantes, são eles a porcentagem de crossover e mutação. A reprodução só ocorre para um determinado par de pais caso um número aleatório gerado seja menor que a porcentagem de crossover determinado no programa, em caso positivo os indivíduos da próxima geração serão uma combinação, gerada pela função de crossover, dos pais, já em caso negativo os filhos serão copias idênticas.</p>
+</div>
+<div class="paragraph">
+<p>A função de crossover converte os pais em seus valores binário e, então, determina um ponto de separação, separando os pais em cabeça e calda. Os filhos gerados serão a concatenação da cabeça do pai 1 com a calda do pai 2 e cabeça do pai 2 com calda do pai 1.</p>
+</div>
+<div class="paragraph">
+<p>Além da operação de crossover, a função também implementa a mutação que é determinada pela probabilidade de mutação, caso um número aleatório seja menor que esta probabilidade, o bit do filho tem seu valor invertido.</p>
+</div>
+<div class="paragraph">
+<p>A função crossover que implementa as operações de crossover e mutação pode ser vista abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="title">crossover.m</div>
+<div class="content">
+<pre class="highlight"><code class="language-matlab" data-lang="matlab">function [filho1, filho2] = crossover(pai1, pai2, pMut)
+    nbits = 13;
+    filho1 = zeros(1, 2);
+    filho2 = zeros(1, 2);
+    filho1 = dec2bin(filho1, nbits);
+    filho2 = dec2bin(filho2, nbits);
+
+    pai1 = round(pai1.*100); %preserva duas casas decimais
+    pai2 = round(pai2.*100); %preserva duas casas decimais
+
+    %converte os pais em binario
+    pai1 = dec2bin(typecast(int8(pai1), 'uint8'), nbits);
+    pai2 = dec2bin(typecast(int8(pai2), 'uint8'), nbits);
+
+    %gera ponto de separacao
+    split = round(rand()*nbits);
+
+    %cria os filhos
+    filho1(1, 1:split) = pai1(1, 1:split);
+    filho1(2, 1:split) = pai1(2, 1:split);
+    filho2(1, 1:split) = pai2(1, 1:split);
+    filho2(2, 1:split) = pai2(2, 1:split);
+    split = split+1;
+    filho1(1, split:nbits) = pai2(1, split:nbits);
+    filho1(2, split:nbits) = pai2(2, split:nbits);
+    filho2(1, split:nbits) = pai1(1, split:nbits);
+    filho2(1, split:nbits) = pai1(1, split:nbits);
+
+    %realiza mutacao
+    for i = 1:nbits
+       if rand() &lt; pMut
+            if filho1(1,i) == 0
+                filho1(1,i) = 1;
+            else
+                filho1(1,i) = 0;
+            end
+       end
+       if rand() &lt; pMut
+            if filho1(2,i) == 0
+                filho1(2,i) = 1;
+            else
+                filho1(2,i) = 0;
+            end
+       end
+       if rand() &lt; pMut
+            if filho2(1,i) == 0
+                filho2(1,i) = 1;
+            else
+                filho2(1,i) = 0;
+            end
+       end
+       if rand() &lt; pMut
+            if filho2(2,i) == 0
+                filho2(2,i) = 1;
+            else
+                filho2(2,i) = 0;
+            end
+       end
+    end
+
+    %converte os filhos para float com duas casas decimais
+    filho1 = typecast(uint8(bin2dec(filho1)), 'int8');
+    filho2 = typecast(uint8(bin2dec(filho2)), 'int8');
+    filho1 = filho1./100;
+    filho2 = filho2./100;
+    filho1 = transpose(filho1);
+    filho2 = transpose(filho2);
+end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O script que implementa o algoritmo genético pode ser visto abaixo.</p>
+</div>
+<div class="listingblock">
+<div class="title">AG.m</div>
+<div class="content">
+<pre class="highlight"><code class="language-matlab" data-lang="matlab">%parametros do algoritmo
+popSize = 30; %tamanho da populacao
+pCross = 0.9; %porcentagem de crossover
+pMut = 0.05; %porcentagem de mutacao
+ger = 5; %quantidade de geracoes
+
+%area de busca
+xMin = -500;
+xMax = 500;
+yMin = -500;
+yMax = 500;
+
+%inicializacao de variaveis
+pop = zeros(popSize, 2);
+apt = zeros(popSize, 1);
+aptNorm = zeros(popSize, 1);
+histBest = zeros(ger, 3);
+
+%populacao inicial
+for i=1:popSize
+    pop(i, :) = [(xMin + rand()*(xMax - xMin)) (yMin + rand()*(yMax - yMin))];
+end
+
+gerAt = 1;
+
+while gerAt &lt;= ger
+    figure(1);
+    plot(pop(:,1), pop(:,2), '*');
+    hold on
+    apt = objectiveFunction(pop(:,1), pop(:,2));
+    aptNorm = normaliza(apt);
+
+    %seleciona os individuos que irao fazer crossover
+    selected = roleta(pop, aptNorm);
+
+    k = 1;
+
+    %realiza operacao de crossover
+    for i=1:((popSize/2)-1)
+        i1 = 2*i;
+        i2 = 2*i+1;
+        if rand() &lt; pCross
+            [pop(i1,:), pop(i2,:)] = crossover(selected(i1,:), selected(i2,:), pMut);
+        else
+            pop(i1,:) = selected(i1,:);
+            pop(i2,:) = selected(i2,:);
+        end
+    end
+
+    for i=1:popSize
+        if aptNorm(i) == 1
+            histBest(gerAt,:) = [pop(i,:) apt(i)];
+            figure(2);
+        end
+    end
+
+    gerAt = gerAt + 1;
+end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como resultado da execução do algoritmo genético usando os parâmetros descriminados no script acima foi obtido um ponto de mínimo em torno de -247.5 que acontece no ponto (0,0), como visto nos gráficos abaixo, onde o primeiro mostra o indivíduo de melhor aptidão por geração e o segundo plot a melhor aptidão por geração.</p>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="./images/bestPosAG.png" alt="bestPosAG" width="500" height="500">
+</div>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="./images/minAG.png" alt="minAG" width="500" height="500">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_conclusão">5. Conclusão</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apesar de ambas a técnicas terem sido aplicadas para minimização de uma mesma função objetivo, o algoritmo da nuvem de partículas foi capaz de encontrar um valor melhor em comparação ao algoritmo genético. Acredita-se que houve um erro lógico de implementação no algoritmo genético, que infelizmente não foi identificado, já que o mesmo tem um nível de dificuldade maior que o algoritmo da nuvem de partículas.</p>
+</div>
+<div class="paragraph">
+<p>Portanto, acredita-se que o mínimo global da função objetivo ocorre na região do ponto (-423,-500) com valor -340.9, como apontado pelo algoritmo da nuvem de partículas.</p>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-05-26 18:18:14 BRT
+Last updated 2016-05-27 23:55:09 BRT
 </div>
 </div>
 </body>
